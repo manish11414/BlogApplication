@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+    </head>
+
+    <body>
+        <div>
+            <h1 style="text-align:center">Login</h1>
+        </div>
+        <div id = "login-user" align = "center">
+            <form action = "loginRequest" modelattribute="login" method="post">
+                <input path = "emailId" placeholder="Email" /><br><br>
+                <input path = "password" placeholder="Password" /><br><br>
+                <input type = "submit" value = "Submit" /><br><br>
+                Doesn't have account? <a href="/user/register-page">Create One</a>
+            </form>
+        </div>
+    </body>
+</html>

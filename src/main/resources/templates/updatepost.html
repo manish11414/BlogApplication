@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Application</title>
+</head>
+<body >
+<header>
+    <h1 style = "text-align:center">New Post</h1>
+</header>
+<div id = "new-post" align="center">
+
+    <form action="#" th:action="@{/post/updatePost}" th:object="${updatePost}" method="POST">
+
+        <input type = "text" th:text="*{}" th:field = "*{title}" placeholder="Title"><br><br>
+        <input type = "text" th:field = "*{author}" placeholder="Author"><br><br>
+        <input type = "text" th:field = "*{tagName}" placeholder="Tags" ><br><br>
+        <textarea cols="50" rows="3" th:field = "*{excerpt}" placeholder="Excerpt"></textarea><br><br>
+        <textarea cols="50" rows="20" th:field = "*{content}" placeholder="Write here.."></textarea><br><br>
+        <input type = "submit" value="Publish">
+
+    </form>
+
+</div>
+</body>
+</html>
