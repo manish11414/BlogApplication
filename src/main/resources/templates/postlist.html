@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>Post List</title>
 </head>
 <body>
 
-<div th:if="${not #lists.isEmpty(postList)}">
+<div align="center" class="container my-2">
     <h2>Post List</h2>
-    <table border="1">
+    <table border="1" class = "table table-striped table-responsive-md">
         <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Tag</th>
-            <th>Date</th>
-            <th>Excerpt</th>
+            <th>
+                <a th:href="@{'/post/http://abc.com/' + ${currentPageNo} + '?sortField=title&order=' + ${reverseOrder}}">
+                    Title
+                </a>
+            </th>
+            <th>
+                <a th:href="@{'/post/http://abc.com/' + ${currentPageNo} + '?sortField=author&order=' + ${reverseOrder}}">
+                    Author
+                </a>
+            </th>
+            <th>
+                <a th:href="@{'/post/http://abc.com/' + ${currentPageNo} + '?sortField=tagName&order=' + ${reverseOrder}}">
+                    Tag
+                </a>
+            </th>
+            <th>
+                <a th:href="@{'/post/http://abc.com/' + ${currentPageNo} + '?sortField=publishedAt&order=' + ${reverseOrder}}">
+                    PublishedAt
+                </a>
+            </th>
+            <th>
+                <a th:href="@{'/post/http://abc.com/' + ${currentPageNo} + '?sortField=excerpt&order=' + ${reverseOrder}}">
+                    Excerpt
+                </a>
+            </th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
@@ -46,18 +67,18 @@
 
             <div class="col-sm-1">
                 <span th:each = "i: ${#numbers.sequence(1, totalPages)}">
-                    <a th:if = "${currentPageNo != i}" th:href="@{'/post/http://abc.com/' + ${i}}">[[${i}]]</a>
+                    <a th:if = "${currentPageNo != i}" th:href="@{'/post/http://abc.com/' + ${i} + '?sortField=' + ${sortField} + '&order=' + ${order}}">[[${i}]]</a>
                     <span th:unless="${currentPageNo != i}">[[${i}]]</span> &nbsp; &nbsp;
                 </span>
             </div>
 
             <div class="col-sm-1">
-                <a th:if="${currentPageNo < totalPages}" th:href="@{'/post/http://abc.com/' + ${currentPageNo + 1}}">Next</a>
+                <a th:if="${currentPageNo < totalPages}" th:href="@{'/post/http://abc.com/' + ${currentPageNo + 1} + '?sortField=' + ${sortField} + '&order=' + ${order}}">Next</a>
                 <span th:unless="${currentPageNo < totalPages}">Next</span>
             </div>
 
             <div class = "col-sm-1">
-                <a th:if="${currentPageNo < totalPages}" th:href="@{'/post/http://abc.com/' + ${totalPages}}">Last</a>
+                <a th:if="${currentPageNo < totalPages}" th:href="@{'/post/http://abc.com/' + ${totalPages} + '?sortField=' + ${sortField} + '&order=' + ${order}}">Last</a>
                 <span th:unless="${currentPageNo < totalPages}">Last</span>
             </div>
         </div>

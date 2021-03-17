@@ -24,10 +24,6 @@ public class PostController {
     @Autowired
     private PostTagService postTagService;
 
-//    public PostController(PostTagService postTagService) {
-//        this.postTagService = postTagService;
-//    }
-
     @RequestMapping("/new-post")
     public String postForm(Model model){
         Post newPost = new Post();
@@ -50,7 +46,6 @@ public class PostController {
         String[] tagList = newPost.getTagName().trim().split(",");
         for(String tagName : tagList){
             PostTag newTag = new PostTag();
-            tagName.trim();
 
             //if(postTagService.getTagByName(tagName) != null){
                 newTag.setPostId(newPost.getPostId());
@@ -67,10 +62,7 @@ public class PostController {
     @RequestMapping("/post-list")
     //@GetMapping("/index")
     public String showAllPost(Model model){
-         return findPaginated(1,model);
-//        model.addAttribute("postList",postService.getAllPost());
-//        return "postlist";
-        //return "index";
+         return findPaginated(1,"title", "asc", model);
     }
 
     @RequestMapping(value = "/selected-post", method = RequestMethod.POST)
@@ -97,17 +89,25 @@ public class PostController {
     }
 
     @GetMapping("/http://abc.com/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model){
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
+         @RequestParam("sortField") String sortField, @RequestParam("order") String order,
+                                Model model){
+
         int pageSize = 10;
 
-        Page<Post> page = postService.findPaginated(pageNo, pageSize);
+        Page<Post> page = postService.findPaginated(pageNo, pageSize, sortField, order);
         List<Post> listOfPost = page.getContent();
+
         model.addAttribute("currentPageNo",pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listOfPost", listOfPost);
-        model.addAttribute("postList", listOfPost);
-        return "postlist";
 
+        model.addAttribute("postList", listOfPost);
+
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("order",order);
+        model.addAttribute("reverseOrder", order.equals("asc") ? "desc" : "asc");
+
+        return "postlist";
     }
 }
