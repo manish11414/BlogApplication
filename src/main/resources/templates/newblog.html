@@ -12,11 +12,11 @@
 
     <form action="#" th:action="@{/post/addNewPost}" th:object="${newPost}" method="POST">
 
-        <input type = "text" th:field = "*{title}" placeholder="Title"><br><br>
-        <input type = "text" th:field = "*{author}" placeholder="Author"><br><br>
-        <input type = "text" th:field = "*{tagName}" placeholder="Tags" ><br><br>
-        <textarea cols="50" rows="3" th:field = "*{excerpt}" placeholder="Excerpt"></textarea><br><br>
-        <textarea cols="50" rows="20" th:field = "*{content}" placeholder="Write here.."></textarea><br><br>
+        <input type = "text" th:field = "*{title}" placeholder="Title" required><br><br>
+        <input type = "text" th:field = "*{author}" placeholder="Author" required><br><br>
+        <input type = "text" th:field = "*{tagName}" placeholder="Tags" required><br><br>
+        <textarea cols="50" rows="3" th:field = "*{excerpt}" placeholder="Excerpt" required></textarea><br><br>
+        <textarea cols="50" rows="20" th:field = "*{content}" placeholder="Write here.." required></textarea><br><br>
         <input type = "submit" value="Publish">
 
     </form>

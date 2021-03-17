@@ -1,13 +1,13 @@
 package com.springboot.blog.controller;
 
 import com.springboot.blog.entity.Post;
-import com.springboot.blog.service.PostServiceImpl;
+import com.springboot.blog.entity.PostTag;
+import com.springboot.blog.service.PostService;
+import com.springboot.blog.service.PostTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,17 +17,15 @@ import java.time.format.DateTimeFormatter;
 public class PostController {
 
     @Autowired
-    private PostServiceImpl postService;
-//    @Autowired
-//    private TagServiceImpl tagService;
-//    @Autowired
-//    private PostTagsServiceImpl postTagsService;
+    private PostService postService;
 
-//    public PostController(PostService postService, TagService tagService, PostTagsService postTagsService) {
-//        this.postService = postService;
-//        this.tagService = tagService;
-//        this.postTagsService = postTagsService;
+    @Autowired
+    private PostTagService postTagService;
+
+//    public PostController(PostTagService postTagService) {
+//        this.postTagService = postTagService;
 //    }
+
     @RequestMapping("/new-post")
     public String postForm(Model model){
         Post newPost = new Post();
@@ -46,16 +44,18 @@ public class PostController {
         newPost.setUpdatedAt(currentTime);
         postService.addNewPost(newPost);
 
-//        Tag newTag = new Tag();
-//        String[] tagList = newPost.getTagName().trim().split(",");
-//        for(String tag : tagList){
-//            if(tagServiceImpl.getTagByName(tag) == null){
-//                newTag.setTagName(tag);
-//                newTag.setCreatedAt(currentTime);
-//                newTag.setUpdatedAt(currentTime);
-//                tagService.addTag(newTag);
-//            }
-//        }
+
+        String[] tagList = newPost.getTagName().trim().split(" ");
+        for(String tagName : tagList){
+            PostTag newTag = new PostTag();
+            //if(postTagService.getTagByName(tagName) != null){
+                newTag.setPostId(newPost.getPostId());
+                newTag.setTagName(tagName);
+                newTag.setCreatedAt(currentTime);
+                newTag.setUpdatedAt(currentTime);
+                postTagService.addNewTag(newTag);
+            //}
+        }
 //        for(String tag : tagList){
 //            PostTags postTags = new PostTags();
 //            postTags.setPostId(newPost.getPostId());
@@ -72,10 +72,26 @@ public class PostController {
         return "postlist";
     }
 
-    @RequestMapping("/update-post")
-    public String updatePost(Model model){
-        Post updatePost = new Post();
+    @RequestMapping(value = "/selected-post", method = RequestMethod.POST)
+    public String updatePostPage(@RequestParam(name="id", required=false) Integer postId, Model model){
+        Post updatePost = postService.getPostById(postId);
         model.addAttribute("updatePost", updatePost);
         return "updatepost";
+    }
+
+    @RequestMapping("/updatePost")
+    public String updatePost(@ModelAttribute("updatePost") Post updatePost){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String currentTime = dtf.format(now);
+        updatePost.setUpdatedAt(currentTime);
+         postService.updatePost(updatePost);
+        return "index";
+    }
+
+    @RequestMapping(value = "/deletePost", method = RequestMethod.POST)
+    public String deletePost(@RequestParam(name="id", required=false) Integer postId){
+        postService.deletePost(postId);
+        return "index";
     }
 }

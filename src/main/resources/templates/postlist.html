@@ -8,7 +8,7 @@
 
 <div th:if="${not #lists.isEmpty(postList)}">
     <h2>Post List</h2>
-    <table class="table table-striped" border="1">
+    <table border="1">
         <tr>
             <th>Title</th>
             <th>Author</th>
@@ -24,8 +24,16 @@
             <td th:text="${post.getTagName()}"></td>
             <td th:text="${post.getPublishedAt()}"></td>
             <td th:text="${post.getExcerpt()}"></td>
-            <td ><a href="/post/update-post">Update</a></td>
-            <td><a href = "">Delete</a></td>
+            <td>
+                <form th:action = "@{/post/selected-post(id=${post.getPostId()})}" method = "post">
+                    <button type="submit" name="Update">Update</button>
+                </form>
+            </td>
+            <td>
+                <form th:action = "@{/post/deletePost(id=${post.getPostId()})}" method = "post">
+                     <button type="submit" name="Delete">Delete</button>
+                </form>
+            </td>
         </tr>
     </table>
 </div>

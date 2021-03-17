@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Tags")
-public class Tag {
+public class PostTag {
     @Id
     @GeneratedValue
     @Column(name = "tagId")
@@ -18,6 +18,17 @@ public class Tag {
 
     @Column(name = "updatedAt")
     private String updatedAt;
+
+    @Column(name = "postId")
+    private int postId;
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
 
     public int getTagId() {
         return tagId;
