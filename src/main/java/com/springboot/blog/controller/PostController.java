@@ -5,12 +5,14 @@ import com.springboot.blog.entity.PostTag;
 import com.springboot.blog.service.PostService;
 import com.springboot.blog.service.PostTagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
 @RequestMapping("/post")
@@ -45,31 +47,30 @@ public class PostController {
         postService.addNewPost(newPost);
 
 
-        String[] tagList = newPost.getTagName().trim().split(" ");
+        String[] tagList = newPost.getTagName().trim().split(",");
         for(String tagName : tagList){
             PostTag newTag = new PostTag();
+            tagName.trim();
+
             //if(postTagService.getTagByName(tagName) != null){
                 newTag.setPostId(newPost.getPostId());
                 newTag.setTagName(tagName);
                 newTag.setCreatedAt(currentTime);
                 newTag.setUpdatedAt(currentTime);
+
                 postTagService.addNewTag(newTag);
             //}
         }
-//        for(String tag : tagList){
-//            PostTags postTags = new PostTags();
-//            postTags.setPostId(newPost.getPostId());
-//            postTags.setTagId(tagService.getTagByName(tag).getTagId());
-//            postTags.setCreatedAt(currentTime);
-//            postTags.setUpdatedAt(currentTime);
-//            postTagsService.addPostTags(postTags);
-//        }
+
         return "index";
     }
     @RequestMapping("/post-list")
+    //@GetMapping("/index")
     public String showAllPost(Model model){
-        model.addAttribute("postList",postService.getAllPost());
-        return "postlist";
+         return findPaginated(1,model);
+//        model.addAttribute("postList",postService.getAllPost());
+//        return "postlist";
+        //return "index";
     }
 
     @RequestMapping(value = "/selected-post", method = RequestMethod.POST)
@@ -93,5 +94,20 @@ public class PostController {
     public String deletePost(@RequestParam(name="id", required=false) Integer postId){
         postService.deletePost(postId);
         return "index";
+    }
+
+    @GetMapping("/http://abc.com/{pageNo}")
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model){
+        int pageSize = 10;
+
+        Page<Post> page = postService.findPaginated(pageNo, pageSize);
+        List<Post> listOfPost = page.getContent();
+        model.addAttribute("currentPageNo",pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listOfPost", listOfPost);
+        model.addAttribute("postList", listOfPost);
+        return "postlist";
+
     }
 }
