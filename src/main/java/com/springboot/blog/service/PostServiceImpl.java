@@ -1,8 +1,11 @@
 package com.springboot.blog.service;
 
 import com.springboot.blog.entity.Post;
+import com.springboot.blog.entity.PostPage;
+import com.springboot.blog.entity.PostSearchCriteria;
+import com.springboot.blog.repository.PostCriteriaRepository;
 import com.springboot.blog.repository.PostRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +17,19 @@ import java.util.List;
 @Service
 public class PostServiceImpl implements PostService{
 
-    @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
+
+    private final PostCriteriaRepository postCriteriaRepository;
+
+    public PostServiceImpl(PostRepository postRepository, PostCriteriaRepository postCriteriaRepository) {
+        this.postRepository = postRepository;
+        this.postCriteriaRepository = postCriteriaRepository;
+    }
+
+    @Override
+    public Page<Post> getPosts(PostPage postPage, PostSearchCriteria postSearchCriteria){
+        return postCriteriaRepository.findAllWithFilters(postPage, postSearchCriteria);
+    }
 
     @Override
     public void addNewPost(Post newPost){
@@ -70,4 +84,16 @@ public class PostServiceImpl implements PostService{
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
         return this.postRepository.findAll(pageable);
     }
+
+    @Override
+    public List<Post> getSearchedPosts(String keyword) {
+        return this.postRepository.findByKeyword(keyword);
+    }
+
+    @Override
+    public List<Post> getFilteredPost(String author, String tags, String publishDate) {
+        return postRepository.findByFilter(author, tags, publishDate);
+    }
+
+
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comment list</title>
+</head>
+<body>
+ <h2>Comments</h2>
+  <table border="1">
+      <th>Name</th>
+      <th>Email</th>
+      <th>Comment</th>
+      <th>Date</th>
+      <th>Update</th>
+      <th>Delete</th>
+
+      <tr th:each="comment : ${commentList}">
+          <td th:text="${comment.getName()}"></td>
+          <td th:text="${comment.getEmail()}"></td>
+          <td th:text="${comment.getComment()}"></td>
+          <td th:text="${comment.getUpdatedAt()}"></td>
+
+          <td>
+              <form th:action = "@{/comment/update-comment-page(id=${comment.getCommentId()})}" method = "post">
+                  <button type="submit" name="Update">Update</button>
+              </form>
+          </td>
+          <td>
+              <form th:action = "@{/comment/delete-comment(id=${comment.getCommentId()})}" method = "post">
+                  <button type="submit" name="Delete">Delete</button>
+              </form>
+          </td>
+      </tr>
+  </table>
+</body>
+</html>

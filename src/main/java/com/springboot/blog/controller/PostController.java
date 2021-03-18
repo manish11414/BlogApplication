@@ -4,7 +4,7 @@ import com.springboot.blog.entity.Post;
 import com.springboot.blog.entity.PostTag;
 import com.springboot.blog.service.PostService;
 import com.springboot.blog.service.PostTagService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +18,28 @@ import java.util.List;
 @RequestMapping("/post")
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
-    @Autowired
-    private PostTagService postTagService;
+    private final PostTagService postTagService;
+
+    public PostController(PostService postService, PostTagService postTagService) {
+        this.postService = postService;
+        this.postTagService = postTagService;
+    }
+
+    @GetMapping("/filter")
+    public String findByFilter(@RequestParam("author") String author, @RequestParam("tags") String tags, @RequestParam("publishDate") String publishDate,
+                               Model model){
+        model.addAttribute("searchedPost", postService.getFilteredPost(author, tags, publishDate));
+        return "filterPost";
+    }
+
+
+    @GetMapping("/search")
+    public String findByKeyword(@RequestParam("keyword") String keyword, Model model){
+        model.addAttribute("searchedPost",postService.getSearchedPosts(keyword));
+        return "filterPost";
+    }
 
     @RequestMapping("/new-post")
     public String postForm(Model model){
@@ -47,14 +64,12 @@ public class PostController {
         for(String tagName : tagList){
             PostTag newTag = new PostTag();
 
-            //if(postTagService.getTagByName(tagName) != null){
                 newTag.setPostId(newPost.getPostId());
                 newTag.setTagName(tagName);
                 newTag.setCreatedAt(currentTime);
                 newTag.setUpdatedAt(currentTime);
 
                 postTagService.addNewTag(newTag);
-            //}
         }
 
         return "index";
@@ -70,6 +85,13 @@ public class PostController {
         Post updatePost = postService.getPostById(postId);
         model.addAttribute("updatePost", updatePost);
         return "updatepost";
+    }
+
+    @RequestMapping(value = "/viewPostPage", method = RequestMethod.POST)
+    public String viewPostPage(@RequestParam(name = "id", required = false) Integer postId, Model model){
+        Post viewPost = postService.getPostById(postId);
+        model.addAttribute("viewPost", viewPost);
+        return "post";
     }
 
     @RequestMapping("/updatePost")
