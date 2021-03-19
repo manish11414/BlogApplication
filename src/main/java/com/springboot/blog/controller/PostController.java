@@ -28,9 +28,11 @@ public class PostController {
     }
 
     @GetMapping("/filter")
-    public String findByFilter(@RequestParam("author") String author, @RequestParam("tags") String tags, @RequestParam("publishDate") String publishDate,
-                               Model model){
-        model.addAttribute("searchedPost", postService.getFilteredPost(author, tags, publishDate));
+    public String getFilteredPost(@ModelAttribute("filterPost") Post filterPost, Model model){
+//        System.out.println(filterPost.getAuthor());
+//        System.out.println(filterPost.getTagName());
+//        System.out.println(filterPost.getPublishedAt());
+        model.addAttribute("searchedPost", postService.getFilteredPost(filterPost.getAuthor(), filterPost.getTagName(), filterPost.getPublishedAt()));
         return "filterPost";
     }
 
@@ -120,11 +122,14 @@ public class PostController {
         Page<Post> page = postService.findPaginated(pageNo, pageSize, sortField, order);
         List<Post> listOfPost = page.getContent();
 
+        Post filterPost = new Post();
+
         model.addAttribute("currentPageNo",pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
 
         model.addAttribute("postList", listOfPost);
+        model.addAttribute("filterPost",filterPost);
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("order",order);

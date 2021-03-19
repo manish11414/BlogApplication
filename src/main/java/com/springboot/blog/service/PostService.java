@@ -1,8 +1,6 @@
 package com.springboot.blog.service;
 
 import com.springboot.blog.entity.Post;
-import com.springboot.blog.entity.PostPage;
-import com.springboot.blog.entity.PostSearchCriteria;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -20,5 +18,4 @@ public interface PostService {
 
     List<Post> getFilteredPost(String author, String tags, String publishDate);
 
-    Page<Post> getPosts(PostPage postPage, PostSearchCriteria postSearchCriteria);
 }

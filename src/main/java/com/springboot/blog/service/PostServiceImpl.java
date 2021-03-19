@@ -1,9 +1,6 @@
 package com.springboot.blog.service;
 
 import com.springboot.blog.entity.Post;
-import com.springboot.blog.entity.PostPage;
-import com.springboot.blog.entity.PostSearchCriteria;
-import com.springboot.blog.repository.PostCriteriaRepository;
 import com.springboot.blog.repository.PostRepository;
 
 import org.springframework.data.domain.Page;
@@ -19,16 +16,8 @@ public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
 
-    private final PostCriteriaRepository postCriteriaRepository;
-
-    public PostServiceImpl(PostRepository postRepository, PostCriteriaRepository postCriteriaRepository) {
+    public PostServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
-        this.postCriteriaRepository = postCriteriaRepository;
-    }
-
-    @Override
-    public Page<Post> getPosts(PostPage postPage, PostSearchCriteria postSearchCriteria){
-        return postCriteriaRepository.findAllWithFilters(postPage, postSearchCriteria);
     }
 
     @Override
@@ -91,9 +80,8 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> getFilteredPost(String author, String tags, String publishDate) {
-        return postRepository.findByFilter(author, tags, publishDate);
+    public List<Post> getFilteredPost(String author, String tag_name, String published_at) {
+        return this.postRepository.findByAuthorAndTagNameAndPublishedAt(author, tag_name, published_at);
     }
-
 
 }
