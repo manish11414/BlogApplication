@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Post List</title>
+</head>
+<body>
+
+<div align="center" class="container my-2">
+    <h3>Searched Post List</h3>
+
+    <div class="form-group blu-margin">
+        <form  action = "#" th:action="@{/post/filtered-post}" th:object="${filteredPost}" method="get">
+            <table border="1">
+                <th>Author</th>
+                <th>Tags</th>
+                <th>Published At</th>
+            <tr>
+                <td>
+                <select th:field = "*{author}">
+                    <option value = "">--</option>
+                    <option th:each="post : ${searchedPost}" th:value="${post.getAuthor()}" th:text="${post.getAuthor()}"></option>
+                </select>
+                </td>
+
+                <td>
+                <select th:field = "*{tagName}">
+                    <option value="">--</option>
+                    <option th:each="post : ${searchedPost}" th:value="${post.getTagName()}" th:text="${post.getTagName()}"></option>
+                </select>
+                </td>
+
+                <td>
+                <select th:field = "*{publishedAt}">
+                    <option value="">--</option>
+                    <option th:each="post : ${searchedPost}" th:value="${post.getPublishedAt()}" th:text="${post.getPublishedAt()}"></option>
+                </select>
+                </td>
+                <td><button type="submit" value = "sumit">Go</button></td>
+            </tr>
+            </table>
+
+        </form>
+    </div>
+
+    <table border="1" class = "table table-striped table-responsive-md">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Tag</th>
+            <th>PublishedAt</th>
+            <th> Excerpt</th>
+            <th>View</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+        <tr th:each="post : ${searchedPost}">
+            <td th:text="${post.getTitle()}"></td>
+            <td th:text="${post.getAuthor()}"></td>
+            <td th:text="${post.getTagName()}"></td>
+            <td th:text="${post.getPublishedAt()}"></td>
+            <td th:text="${post.getExcerpt()}"></td>
+
+            <td>
+                <form th:action = "@{/post/viewPostPage(id=${post.getPostId()})}" method = "post">
+                    <button type="submit" name="View">View</button>
+                </form>
+            </td>
+
+            <td>
+                <form th:action = "@{/post/selected-post(id=${post.getPostId()})}" method = "post">
+                    <button type="submit" name="Update">Update</button>
+                </form>
+            </td>
+            <td>
+                <form th:action = "@{/post/deletePost(id=${post.getPostId()})}" method = "post">
+                    <button type="submit" name="Delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+</body>
+</html>

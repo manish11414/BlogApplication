@@ -27,20 +27,26 @@ public class PostController {
         this.postTagService = postTagService;
     }
 
-    @GetMapping("/filter")
-    public String getFilteredPost(@ModelAttribute("filterPost") Post filterPost, Model model){
-//        System.out.println(filterPost.getAuthor());
-//        System.out.println(filterPost.getTagName());
-//        System.out.println(filterPost.getPublishedAt());
-        model.addAttribute("searchedPost", postService.getFilteredPost(filterPost.getAuthor(), filterPost.getTagName(), filterPost.getPublishedAt()));
-        return "filterPost";
-    }
 
+//    public String getFilteredPost(@ModelAttribute("filterPost") Post filterPost, Model model){
+////        System.out.println(filterPost.getAuthor());
+////        System.out.println(filterPost.getTagName());
+////        System.out.println(filterPost.getPublishedAt());
+//        model.addAttribute("searchedPost", postService.getFilteredPost(filterPost.getAuthor(), filterPost.getTagName(), filterPost.getPublishedAt()));
+//        return "searched-post";
+//    }
+
+    @GetMapping("/filtered-post")
+    public String filteredPostPage(@ModelAttribute("filteredPost") Post filteredPost, Model model){
+        model.addAttribute("filteredPost", postService.getFilteredPost(filteredPost.getAuthor(), filteredPost.getTagName(), filteredPost.getPublishedAt()));
+        return "filtered-post";
+    }
 
     @GetMapping("/search")
     public String findByKeyword(@RequestParam("keyword") String keyword, Model model){
         model.addAttribute("searchedPost",postService.getSearchedPosts(keyword));
-        return "filterPost";
+        model.addAttribute("filteredPost", new Post());
+        return "searched-post";
     }
 
     @RequestMapping("/new-post")
@@ -134,6 +140,8 @@ public class PostController {
         model.addAttribute("sortField", sortField);
         model.addAttribute("order",order);
         model.addAttribute("reverseOrder", order.equals("asc") ? "desc" : "asc");
+
+        model.addAttribute("filteredPost", new Post());
 
         return "postlist";
     }
