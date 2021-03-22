@@ -14,7 +14,7 @@ public interface PostService {
     String[] getAllAuthorName();
     String[] getAllTagName();
     String[] getAllByPublishedAt(String tagName);
-    List<Post> getAllByPublishedBetween(String from, String to);
+    String[] getAllPublishedAt();
 
     void updatePost(Post updatePost);
     void deletePost(int postId);

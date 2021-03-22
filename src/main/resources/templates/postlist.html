@@ -11,19 +11,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
     <meta charset="UTF-8">
-    <title>Post List</title>
+    <title>Blog Application</title>
 </head>
 <body>
+<header>
+    <div align="center" class="container my-2">
+    <table>
+        <tr>
+            <td>
+                <div align="left" class="container my-2">
+                    <form th:action="@{/post/new-post}">
+                        <button type="submit" name="create">Create a blog</button>
+                    </form>
+                </div>
+            </td>
 
-<div class="container my-2">
-    <form>
+            <td>
+                <div align="right" class="container my-2">
+                    <form th:action="@{/user/login-page}">
+                        <button type="submit" name="login">Login</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </div>
 
-    </form>
-</div>
+
+</header>
+
 
 <div align="center" class="container my-2">
 
-    <h2>Post List</h2>
+    <h2>Blog Application</h2>
     <form th:action="@{/post/search}" method="get">
         <input type = "text" name = "keyword" placeholder="Search">
         <button type = "submit">Go</button>
@@ -39,8 +59,6 @@
 
                 <tr>
                     <td>
-
-
                             <select th:field="*{author}" class="selectpicker" multiple data-live-search="true">
                                 <option value="" selected>--</option>
                                 <option th:each="post: ${postList}"

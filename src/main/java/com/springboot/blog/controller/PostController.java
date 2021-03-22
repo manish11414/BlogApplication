@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,65 +29,50 @@ public class PostController {
     }
 
 
-//    public String getFilteredPost(@ModelAttribute("filterPost") Post filterPost, Model model){
-////        System.out.println(filterPost.getAuthor());
-////        System.out.println(filterPost.getTagName());
-////        System.out.println(filterPost.getPublishedAt());
-//        model.addAttribute("searchedPost", postService.getFilteredPost(filterPost.getAuthor(), filterPost.getTagName(), filterPost.getPublishedAt()));
-//        return "searched-post";
-//    }
-
     @GetMapping("/filtered-post")
     public String filteredPostPage(@ModelAttribute("filterPost") Post filterPost, Model model){
-       // model.addAttribute("filterPost", postService.getFilteredPost(filterPost.getAuthor(), filterPost.getTagName(), filterPost.getPublishedAt()));
 
             System.out.println(filterPost.getAuthor());
             System.out.println(filterPost.getTagName());
             System.out.println(filterPost.getPublishedAt());
 
         String[] authorNameList = filterPost.getAuthor().trim().split(",");
+        System.out.println(authorNameList.length);
 
-        if(authorNameList.length == 0) {
+        if(authorNameList.length == 1) {
             authorNameList = postService.getAllAuthorName();
         }
 
         String[] tagNameList = filterPost.getTagName().trim().split(",");
+        System.out.println(tagNameList.length);
 
-        if(tagNameList.length == 0){
+        if(tagNameList.length == 1){
             tagNameList = postService.getAllTagName();
         }
 
         String[] publishedList = filterPost.getPublishedAt().split(",");
 
-        if(publishedList.length == 0){
-            publishedList = postService.getAllAuthorName();
+        if(publishedList.length == 1){
+            publishedList = postService.getAllPublishedAt();
         }
-        else if(publishedList.length == 1){
-            publishedList = postService.getAllByPublishedAt(publishedList[0]);
+        else if(publishedList.length == 2){
+            publishedList = postService.getAllByPublishedAt(publishedList[1]);
         }
+        else{
+            String from = publishedList[1];
+            String to = publishedList[2];
+            int index = 0;
 
+            String[] checkPublishedList = postService.getAllPublishedAt();
+            for(String check : checkPublishedList){
+                if(from.compareToIgnoreCase(check) >= 0 && to.compareToIgnoreCase(check) <= 0){
+                    publishedList[index++] = check;
+                }
+            }
+        }
 
        model.addAttribute("postFiltered",postService.getFilteredPost(authorNameList, tagNameList, publishedList));
 
-//
-//        for(String tags : tagNameList){
-//            if(tags != null)
-//                tagNamePost.addAll(postService.getAllByTagName(tags));
-//        }
-
-        //publishedPost.addAll(postService.getAllByPublishedBetween(publishedList[0],publishedList[1]));
- //       publishedPost = postService.getAllByPublishedBetween(publishedList[0],publishedList[1]);
-//        for (String publish : publishedList){
-//            if(publish != null)
-//               publishedPost.add(postService.getAllByPublishedAt(publish));
-//        }
-
-           // List<Post> filterPost = authorPost.stream().filter(tagNamePost::contains).filter(publishedPost::contains).collect(Collectors.toList());
-//            for(String post: filterPost)
-//                System.out.println(post);
-
-        //model.addAttribute("filterPost", authorPost.stream().filter(tagNamePost::contains).filter(publishedPost::contains).collect(Collectors.toList()));
-       // model.addAttribute("filterPost",authorPost);
         return "filtered-post";
     }
 
@@ -132,10 +116,11 @@ public class PostController {
 
         return "index";
     }
+
     @RequestMapping("/post-list")
 
     public String showAllPost(Model model){
-         return findPaginated(1,"title", "asc", model);
+         return findPaginated(1,"publishedAt", "asc", model);
     }
 
     @RequestMapping(value = "/selected-post", method = RequestMethod.POST)

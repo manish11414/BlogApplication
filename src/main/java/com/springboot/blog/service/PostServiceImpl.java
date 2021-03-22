@@ -46,6 +46,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public String[] getAllPublishedAt(){
+        return postRepository.findAllPublishedAt();
+    }
+
+    @Override
     public String[] getAllByPublishedAt(String publishedAt) {
         return postRepository.findAllByPublishedAt(publishedAt);
     }
@@ -60,10 +65,7 @@ public class PostServiceImpl implements PostService{
         existPost.setAuthor(updatePost.getAuthor());
         existPost.setExcerpt(updatePost.getExcerpt());
         existPost.setTagName(updatePost.getTagName());
-        //existPost.setCreatedAt(updatePost.getCreatedAt());
         existPost.setContent(updatePost.getContent());
-        //existPost.setPublishedAt(updatePost.getPublishedAt());
-        //existPost.setIsPublished(updatePost.getIsPublished());
         existPost.setUpdatedAt(updatePost.getUpdatedAt());
         postRepository.save(existPost);
     }
@@ -90,10 +92,4 @@ public class PostServiceImpl implements PostService{
     public List<Post> getFilteredPost(String[] author, String[] tag_name, String[] publishedAt) {
         return this.postRepository.findAllByAuthorAndTagNameAndPublishedA(author, tag_name, publishedAt);
     }
-
-    @Override
-    public List<Post> getAllByPublishedBetween(String from, String to) {
-        return postRepository.findAllByPublishedAtBetweenPublishedAt(from, to);
-    }
-
 }
