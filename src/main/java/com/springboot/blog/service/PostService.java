@@ -8,14 +8,20 @@ import java.util.List;
 public interface PostService {
     void addNewPost(Post post);
     List<Post> getAllPost();
+
     Post getPostById(int postId);
-    List<Post> getAllPostByTagName(String tagName);
-    List<Post> getAllPostByAuthor(String author);
+
+    String[] getAllAuthorName();
+    String[] getAllTagName();
+    String[] getAllByPublishedAt(String tagName);
+    List<Post> getAllByPublishedBetween(String from, String to);
+
     void updatePost(Post updatePost);
     void deletePost(int postId);
     Page<Post> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
     List<Post> getSearchedPosts(String keyword);
 
-    List<Post> getFilteredPost(String author, String tags, String publishDate);
+
+    List<Post> getFilteredPost(String[] author, String[] tags, String[] publishedAt);
 
 }

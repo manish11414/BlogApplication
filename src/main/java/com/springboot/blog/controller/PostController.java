@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/post")
@@ -37,8 +39,56 @@ public class PostController {
 //    }
 
     @GetMapping("/filtered-post")
-    public String filteredPostPage(@ModelAttribute("filteredPost") Post filteredPost, Model model){
-        model.addAttribute("filteredPost", postService.getFilteredPost(filteredPost.getAuthor(), filteredPost.getTagName(), filteredPost.getPublishedAt()));
+    public String filteredPostPage(@ModelAttribute("filterPost") Post filterPost, Model model){
+       // model.addAttribute("filterPost", postService.getFilteredPost(filterPost.getAuthor(), filterPost.getTagName(), filterPost.getPublishedAt()));
+
+            System.out.println(filterPost.getAuthor());
+            System.out.println(filterPost.getTagName());
+            System.out.println(filterPost.getPublishedAt());
+
+        String[] authorNameList = filterPost.getAuthor().trim().split(",");
+
+        if(authorNameList.length == 0) {
+            authorNameList = postService.getAllAuthorName();
+        }
+
+        String[] tagNameList = filterPost.getTagName().trim().split(",");
+
+        if(tagNameList.length == 0){
+            tagNameList = postService.getAllTagName();
+        }
+
+        String[] publishedList = filterPost.getPublishedAt().split(",");
+
+        if(publishedList.length == 0){
+            publishedList = postService.getAllAuthorName();
+        }
+        else if(publishedList.length == 1){
+            publishedList = postService.getAllByPublishedAt(publishedList[0]);
+        }
+
+
+       model.addAttribute("postFiltered",postService.getFilteredPost(authorNameList, tagNameList, publishedList));
+
+//
+//        for(String tags : tagNameList){
+//            if(tags != null)
+//                tagNamePost.addAll(postService.getAllByTagName(tags));
+//        }
+
+        //publishedPost.addAll(postService.getAllByPublishedBetween(publishedList[0],publishedList[1]));
+ //       publishedPost = postService.getAllByPublishedBetween(publishedList[0],publishedList[1]);
+//        for (String publish : publishedList){
+//            if(publish != null)
+//               publishedPost.add(postService.getAllByPublishedAt(publish));
+//        }
+
+           // List<Post> filterPost = authorPost.stream().filter(tagNamePost::contains).filter(publishedPost::contains).collect(Collectors.toList());
+//            for(String post: filterPost)
+//                System.out.println(post);
+
+        //model.addAttribute("filterPost", authorPost.stream().filter(tagNamePost::contains).filter(publishedPost::contains).collect(Collectors.toList()));
+       // model.addAttribute("filterPost",authorPost);
         return "filtered-post";
     }
 
@@ -58,13 +108,13 @@ public class PostController {
 
     @PostMapping("/addNewPost")
     public String addNewPost(@ModelAttribute("newPost") Post newPost){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        String currentTime = dtf.format(now);
+        String currentDate = dtf.format(now);
         newPost.setIsPublished(1);
-        newPost.setPublishedAt(currentTime);
-        newPost.setCreatedAt(currentTime);
-        newPost.setUpdatedAt(currentTime);
+        newPost.setPublishedAt(currentDate);
+        newPost.setCreatedAt(currentDate);
+        newPost.setUpdatedAt(currentDate);
         postService.addNewPost(newPost);
 
 
@@ -74,8 +124,8 @@ public class PostController {
 
                 newTag.setPostId(newPost.getPostId());
                 newTag.setTagName(tagName);
-                newTag.setCreatedAt(currentTime);
-                newTag.setUpdatedAt(currentTime);
+                newTag.setCreatedAt(currentDate);
+                newTag.setUpdatedAt(currentDate);
 
                 postTagService.addNewTag(newTag);
         }
@@ -83,7 +133,7 @@ public class PostController {
         return "index";
     }
     @RequestMapping("/post-list")
-    //@GetMapping("/index")
+
     public String showAllPost(Model model){
          return findPaginated(1,"title", "asc", model);
     }
@@ -140,8 +190,6 @@ public class PostController {
         model.addAttribute("sortField", sortField);
         model.addAttribute("order",order);
         model.addAttribute("reverseOrder", order.equals("asc") ? "desc" : "asc");
-
-        model.addAttribute("filteredPost", new Post());
 
         return "postlist";
     }

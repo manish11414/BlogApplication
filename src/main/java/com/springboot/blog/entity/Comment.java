@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Comment {
     @Id
     @GeneratedValue
-    @Column(name = "commentId")
+    @Column(name = "comment_id")
     private int commentId;
 
     @Column(name = "name")
@@ -19,13 +19,13 @@ public class Comment {
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "postId")
+    @Column(name = "post_id")
     private int postId;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private String createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private String updatedAt;
 
     public int getCommentId() {

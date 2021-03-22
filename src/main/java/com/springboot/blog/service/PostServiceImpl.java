@@ -31,19 +31,25 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> getAllPostByTagName(String tagName){
-        return postRepository.findAllByTagName(tagName);
-    }
-
-    @Override
-    public List<Post> getAllPostByAuthor(String author){
-        return postRepository.findAllByAuthor(author);
-    }
-
-    @Override
     public Post getPostById(int postId){
         return postRepository.findById(postId).orElse(null);
     }
+
+    @Override
+    public String[] getAllAuthorName() {
+       return postRepository.findAllByAuthorName();
+    }
+
+    @Override
+    public String[]  getAllTagName() {
+        return postRepository.findAllByTagName();
+    }
+
+    @Override
+    public String[] getAllByPublishedAt(String publishedAt) {
+        return postRepository.findAllByPublishedAt(publishedAt);
+    }
+
 
     @Override
     public void updatePost(Post updatePost){
@@ -72,6 +78,7 @@ public class PostServiceImpl implements PostService{
                 Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
         return this.postRepository.findAll(pageable);
+
     }
 
     @Override
@@ -80,8 +87,13 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> getFilteredPost(String author, String tag_name, String published_at) {
-        return this.postRepository.findByAuthorAndTagNameAndPublishedAt(author, tag_name, published_at);
+    public List<Post> getFilteredPost(String[] author, String[] tag_name, String[] publishedAt) {
+        return this.postRepository.findAllByAuthorAndTagNameAndPublishedA(author, tag_name, publishedAt);
+    }
+
+    @Override
+    public List<Post> getAllByPublishedBetween(String from, String to) {
+        return postRepository.findAllByPublishedAtBetweenPublishedAt(from, to);
     }
 
 }

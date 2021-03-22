@@ -10,10 +10,10 @@ public class User {
 
     @Id
     @GeneratedValue
-    @Column(name = "userId")
+    @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "userName")
+    @Column(name = "user_name")
     private String userName;
 
     @Column(name = "email")

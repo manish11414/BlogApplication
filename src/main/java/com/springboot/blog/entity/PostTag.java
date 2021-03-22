@@ -7,19 +7,19 @@ import javax.persistence.*;
 public class PostTag {
     @Id
     @GeneratedValue
-    @Column(name = "tagId")
+    @Column(name = "tag_id")
     private int tagId;
 
-    @Column(name = "tagName")
+    @Column(name = "tag_name")
     private String tagName;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private String createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private String updatedAt;
 
-    @Column(name = "postId")
+    @Column(name = "post_id")
     private int postId;
 
     public int getPostId() {

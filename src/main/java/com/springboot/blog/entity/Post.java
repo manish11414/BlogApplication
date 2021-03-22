@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Post {
     @Id
     @GeneratedValue
-    @Column(name = "postId")
+    @Column(name = "post_id")
     private int postId;
 
     @Column(name = "title")
@@ -22,16 +22,16 @@ public class Post {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "publishedAt")
+    @Column(name = "published_at")
     private String publishedAt;
 
-    @Column(name = "isPublished")
+    @Column(name = "is_published")
     private int isPublished;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private String createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private String updatedAt;
 
     private String tagName;

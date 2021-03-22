@@ -1,7 +1,6 @@
 package com.springboot.blog.controller;
 
 import com.springboot.blog.entity.Comment;
-import com.springboot.blog.entity.Post;
 import com.springboot.blog.service.CommentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

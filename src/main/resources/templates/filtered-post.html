@@ -28,7 +28,7 @@
             <th>Update</th>
             <th>Delete</th>
         </tr>
-        <tr th:each="post : ${filteredPost}">
+        <tr th:each="post : ${postFiltered}">
             <td th:text="${post.getTitle()}"></td>
             <td th:text="${post.getAuthor()}"></td>
             <td th:text="${post.getTagName()}"></td>
