@@ -18,19 +18,18 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
     @Query(value = "select published_at from posts p where p.published_at = :publishedAt", nativeQuery = true)
     String[] findAllByPublishedAt(@Param("publishedAt") String publishedAt);
 
-    @Query(value  ="select published_at from posts", nativeQuery = true)
+    @Query(value  ="select published_at from posts p ", nativeQuery = true)
     String[] findAllPublishedAt();
-
 
 
     @Query(value = "select * from posts p where p.title like %:keyword% or p.content like %:keyword% or p.tag_name like %:keyword% o" +
             "r p.author like %:keyword%", nativeQuery = true)
     List<Post> findByKeyword(@Param("keyword") String keyword);
 
-    @Query(value = "select author from posts", nativeQuery = true)
+    @Query(value = "select author from posts p ", nativeQuery = true)
     String[] findAllByAuthorName();
 
-    @Query(value = "select tag_name from posts", nativeQuery = true)
+    @Query(value = "select tag_name from posts p ", nativeQuery = true)
     String[] findAllByTagName();
 
 
@@ -40,7 +39,6 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
 
     @Query(value = "select * from posts p where p.author IN :authors and p.tag_name IN :tags and p.published_at IN :publishedAt", nativeQuery = true)
     List<Post> findAllByAuthorAndTagNameAndPublishedA(@Param("authors") String[] authors, @Param("tags") String[] tags, @Param("publishedAt") String[] publishedAt);
-
 
 }
 

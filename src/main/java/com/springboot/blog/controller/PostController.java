@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,39 +37,49 @@ public class PostController {
             System.out.println(filterPost.getTagName());
             System.out.println(filterPost.getPublishedAt());
 
-        String[] authorNameList = filterPost.getAuthor().trim().split(",");
+        String[] authorNameList = filterPost.getAuthor().split(",");
         System.out.println(authorNameList.length);
 
-        if(authorNameList.length == 1) {
+
+        if(authorNameList[0] == "" ) {
             authorNameList = postService.getAllAuthorName();
         }
 
-        String[] tagNameList = filterPost.getTagName().trim().split(",");
-        System.out.println(tagNameList.length);
+        String[] tagNameList = filterPost.getTagName().split(",");
 
-        if(tagNameList.length == 1){
+        if(tagNameList[0] == ""){
             tagNameList = postService.getAllTagName();
         }
 
+
         String[] publishedList = filterPost.getPublishedAt().split(",");
 
-        if(publishedList.length == 1){
-            publishedList = postService.getAllPublishedAt();
+        if(publishedList[0] == ""){
+                publishedList = postService.getAllPublishedAt();
         }
         else if(publishedList.length == 2){
-            publishedList = postService.getAllByPublishedAt(publishedList[1]);
-        }
-        else{
-            String from = publishedList[1];
-            String to = publishedList[2];
+            String from = publishedList[0];
+            String to = publishedList[1];
             int index = 0;
+
+            List<String> publishedAtList = new ArrayList<>();
 
             String[] checkPublishedList = postService.getAllPublishedAt();
             for(String check : checkPublishedList){
-                if(from.compareToIgnoreCase(check) >= 0 && to.compareToIgnoreCase(check) <= 0){
-                    publishedList[index++] = check;
+                if(check.compareToIgnoreCase(from) >= 0 && check.compareToIgnoreCase(to) <= 0){
+                    publishedAtList.add(check);
                 }
             }
+            publishedList = new String[publishedAtList.size()+1];
+            for(String list : publishedAtList){
+                publishedList[index++] = list;
+            }
+        }
+
+        System.out.println();
+
+        for(String str: publishedList ){
+            System.out.print(str + ", ");
         }
 
        model.addAttribute("postFiltered",postService.getFilteredPost(authorNameList, tagNameList, publishedList));
