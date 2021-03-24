@@ -2,7 +2,6 @@ package com.springboot.blog.controller;
 
 import com.springboot.blog.entity.User;
 import com.springboot.blog.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ public class UserController {
 
     @RequestMapping("/login-page")
     public String loginPage(){
-        return "login";
+        return "user-login-page";
     }
 
 
@@ -27,12 +26,12 @@ public class UserController {
     public String registerPage(Model model){
         User addUser = new User();
         model.addAttribute("addUser", addUser);
-        return "register";
+        return "user-register-page";
     }
 
     @PostMapping("/register")
     public String addNewUser(@ModelAttribute("addUser") User newUser){
         userService.saveUser(newUser);
-        return "login";
+        return "user-login-page";
     }
 }

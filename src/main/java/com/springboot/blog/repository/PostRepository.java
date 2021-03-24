@@ -11,10 +11,6 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post,Integer> {
 
-    List<Post> findAllByTagName(String tagName);
-
-    List<Post> findAllByAuthor(String author);
-
     @Query(value = "select published_at from posts p where p.published_at = :publishedAt", nativeQuery = true)
     String[] findAllByPublishedAt(@Param("publishedAt") String publishedAt);
 
@@ -32,8 +28,6 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
     @Query(value = "select tag_name from posts p ", nativeQuery = true)
     String[] findAllByTagName();
 
-
-   // @Query(value = "select * from posts p where p.author like %:author% and p.tag_name like %:tag_name% and p.published_at like %:published_at% ", nativeQuery = true)
     @Query(value = "select * from posts p where p.tag_name in tag_name and p.author in author ", nativeQuery = true)
     List<Post> findByAuthorAndTagNameAndPublishedAt(@Param("author") String[] author, @Param("tag_name") String[] tag_name);
 

@@ -9,6 +9,13 @@
 <body>
 
 <div align="center" class="container my-2">
+
+    <div align="left" class="container my-2">
+        <form th:action="@{/post/post-list}">
+            <button type="submit" name="home">Home</button>
+        </form>
+    </div>
+
     <h3>Searched Post List</h3>
 
     <div class="form-group blu-margin">
@@ -38,7 +45,7 @@
                     <option th:each="post : ${searchedPost}" th:value="${post.getPublishedAt()}" th:text="${post.getPublishedAt()}"></option>
                 </select>
                 </td>
-                <td><button type="submit" value = "sumit">Go</button></td>
+                <td><button type="submit" value = "submit">Go</button></td>
             </tr>
             </table>
 

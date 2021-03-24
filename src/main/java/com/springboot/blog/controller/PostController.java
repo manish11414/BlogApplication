@@ -41,20 +41,20 @@ public class PostController {
         System.out.println(authorNameList.length);
 
 
-        if(authorNameList[0] == "" ) {
+        if(authorNameList[0].equalsIgnoreCase("") ) {
             authorNameList = postService.getAllAuthorName();
         }
 
         String[] tagNameList = filterPost.getTagName().split(",");
 
-        if(tagNameList[0] == ""){
+        if(tagNameList[0].equalsIgnoreCase("")){
             tagNameList = postService.getAllTagName();
         }
 
 
         String[] publishedList = filterPost.getPublishedAt().split(",");
 
-        if(publishedList[0] == ""){
+        if(publishedList[0].equalsIgnoreCase("")){
                 publishedList = postService.getAllPublishedAt();
         }
         else if(publishedList.length == 2){
@@ -98,7 +98,7 @@ public class PostController {
     public String postForm(Model model){
         Post newPost = new Post();
         model.addAttribute("newPost",newPost);
-        return "newblog";
+        return "create-new-blog-page";
     }
 
     @PostMapping("/addNewPost")
@@ -138,14 +138,14 @@ public class PostController {
     public String updatePostPage(@RequestParam(name="id", required=false) Integer postId, Model model){
         Post updatePost = postService.getPostById(postId);
         model.addAttribute("updatePost", updatePost);
-        return "updatepost";
+        return "update-post-page";
     }
 
     @RequestMapping(value = "/viewPostPage", method = RequestMethod.POST)
     public String viewPostPage(@RequestParam(name = "id", required = false) Integer postId, Model model){
         Post viewPost = postService.getPostById(postId);
         model.addAttribute("viewPost", viewPost);
-        return "post";
+        return "user-dashboard";
     }
 
     @RequestMapping("/updatePost")
@@ -157,6 +157,7 @@ public class PostController {
          postService.updatePost(updatePost);
         return "index";
     }
+
 
     @RequestMapping(value = "/deletePost", method = RequestMethod.POST)
     public String deletePost(@RequestParam(name="id", required=false) Integer postId){
@@ -187,6 +188,6 @@ public class PostController {
         model.addAttribute("order",order);
         model.addAttribute("reverseOrder", order.equals("asc") ? "desc" : "asc");
 
-        return "postlist";
+        return "all-post-list";
     }
 }

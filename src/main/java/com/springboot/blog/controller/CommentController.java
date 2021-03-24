@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,7 +28,7 @@ public class CommentController {
         newComment.setPostId(postId);
         model.addAttribute("id",postId);
         model.addAttribute("newComment",newComment);
-        return "new-comment-page";
+        return "comment-new-page";
     }
 
     @RequestMapping("/newComment")
@@ -48,13 +47,13 @@ public class CommentController {
     @RequestMapping("/comment-page")
     public String commentPage(@RequestParam(name = "id", required = false) Integer postId, Model model){
         model.addAttribute("commentList", commentService.getCommentsByPostId(postId));
-        return "comment-page";
+        return "comments-page";
     }
 
     @RequestMapping(value = "/update-comment-page", method = RequestMethod.POST)
     public String updateCommentPage(@RequestParam(name="id", required=false) Integer commentId, Model model){
         model.addAttribute("updateComment", commentService.getCommentByCommentId(commentId));
-        return "update-comment-page";
+        return "comment-update-page";
     }
 
     @RequestMapping("/updateComment")

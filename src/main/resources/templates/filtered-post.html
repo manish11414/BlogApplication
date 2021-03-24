@@ -9,6 +9,11 @@
 <body>
 
 <div align="center" class="container my-2">
+    <div align="left" class="container my-2">
+        <form th:action="@{/post/post-list}">
+            <button type="submit" name="home">Home</button>
+        </form>
+    </div>
     <h3>Filtered Post</h3>
 
     <form th:action="@{/post/search}" method="get">
