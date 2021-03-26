@@ -6,13 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Integer> {
 
-    @Query(value = "select published_at from posts p where p.published_at = :publishedAt", nativeQuery = true)
-    String[] findAllByPublishedAt(@Param("publishedAt") String publishedAt);
+    @Query(value = "select author from posts p ", nativeQuery = true)
+    String[] findAllAuthorName();
+
+    @Query(value = "select tag_name from posts p ", nativeQuery = true)
+    String[] findAllTagName();
 
     @Query(value  ="select published_at from posts p ", nativeQuery = true)
     String[] findAllPublishedAt();
@@ -22,17 +26,7 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
             "r p.author like %:keyword%", nativeQuery = true)
     List<Post> findByKeyword(@Param("keyword") String keyword);
 
-    @Query(value = "select author from posts p ", nativeQuery = true)
-    String[] findAllByAuthorName();
-
-    @Query(value = "select tag_name from posts p ", nativeQuery = true)
-    String[] findAllByTagName();
-
-    @Query(value = "select * from posts p where p.tag_name in tag_name and p.author in author ", nativeQuery = true)
-    List<Post> findByAuthorAndTagNameAndPublishedAt(@Param("author") String[] author, @Param("tag_name") String[] tag_name);
-
     @Query(value = "select * from posts p where p.author IN :authors and p.tag_name IN :tags and p.published_at IN :publishedAt", nativeQuery = true)
     List<Post> findAllByAuthorAndTagNameAndPublishedA(@Param("authors") String[] authors, @Param("tags") String[] tags, @Param("publishedAt") String[] publishedAt);
-
 }
 

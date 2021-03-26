@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,23 +29,18 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> getAllPost(){
-        return postRepository.findAll();
-    }
-
-    @Override
     public Post getPostById(int postId){
         return postRepository.findById(postId).orElse(null);
     }
 
     @Override
     public String[] getAllAuthorName() {
-       return postRepository.findAllByAuthorName();
+       return postRepository.findAllAuthorName();
     }
 
     @Override
     public String[]  getAllTagName() {
-        return postRepository.findAllByTagName();
+        return postRepository.findAllTagName();
     }
 
     @Override
@@ -51,16 +49,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public String[] getAllByPublishedAt(String publishedAt) {
-        return postRepository.findAllByPublishedAt(publishedAt);
-    }
-
-
-    @Override
     public void updatePost(Post updatePost){
         Post existPost = postRepository.findById(updatePost.getPostId()).orElse(null);
         if(existPost == null)
             return;
+       // postRepository.save(updatePost)
         existPost.setTitle(updatePost.getTitle());
         existPost.setAuthor(updatePost.getAuthor());
         existPost.setExcerpt(updatePost.getExcerpt());
@@ -80,7 +73,6 @@ public class PostServiceImpl implements PostService{
                 Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
         return this.postRepository.findAll(pageable);
-
     }
 
     @Override

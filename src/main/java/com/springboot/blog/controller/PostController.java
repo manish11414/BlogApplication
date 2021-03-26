@@ -6,7 +6,6 @@ import com.springboot.blog.service.PostService;
 import com.springboot.blog.service.PostTagService;
 
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Controller
+@RestController
 @RequestMapping("/post")
 public class PostController {
 
@@ -31,33 +30,32 @@ public class PostController {
 
 
     @GetMapping("/filtered-post")
-    public String filteredPostPage(@ModelAttribute("filterPost") Post filterPost, Model model){
+    public String filteredPostPage(@ModelAttribute("filterPost") Post filterPost, Model model) {
 
-            System.out.println(filterPost.getAuthor());
-            System.out.println(filterPost.getTagName());
-            System.out.println(filterPost.getPublishedAt());
+        System.out.println(filterPost.getAuthor());
+        System.out.println(filterPost.getTagName());
+        System.out.println(filterPost.getPublishedAt());
 
         String[] authorNameList = filterPost.getAuthor().split(",");
         System.out.println(authorNameList.length);
 
 
-        if(authorNameList[0].equalsIgnoreCase("") ) {
+        if (authorNameList[0].equalsIgnoreCase("")) {
             authorNameList = postService.getAllAuthorName();
         }
 
         String[] tagNameList = filterPost.getTagName().split(",");
 
-        if(tagNameList[0].equalsIgnoreCase("")){
+        if (tagNameList[0].equalsIgnoreCase("")) {
             tagNameList = postService.getAllTagName();
         }
 
 
         String[] publishedList = filterPost.getPublishedAt().split(",");
 
-        if(publishedList[0].equalsIgnoreCase("")){
-                publishedList = postService.getAllPublishedAt();
-        }
-        else if(publishedList.length == 2){
+        if (publishedList[0].equalsIgnoreCase("")) {
+            publishedList = postService.getAllPublishedAt();
+        } else if (publishedList.length == 2) {
             String from = publishedList[0];
             String to = publishedList[1];
             int index = 0;
@@ -65,44 +63,44 @@ public class PostController {
             List<String> publishedAtList = new ArrayList<>();
 
             String[] checkPublishedList = postService.getAllPublishedAt();
-            for(String check : checkPublishedList){
-                if(check.compareToIgnoreCase(from) >= 0 && check.compareToIgnoreCase(to) <= 0){
+            for (String check : checkPublishedList) {
+                if (check.compareToIgnoreCase(from) >= 0 && check.compareToIgnoreCase(to) <= 0) {
                     publishedAtList.add(check);
                 }
             }
-            publishedList = new String[publishedAtList.size()+1];
-            for(String list : publishedAtList){
+            publishedList = new String[publishedAtList.size() + 1];
+            for (String list : publishedAtList) {
                 publishedList[index++] = list;
             }
         }
 
         System.out.println();
 
-        for(String str: publishedList ){
+        for (String str : publishedList) {
             System.out.print(str + ", ");
         }
 
-       model.addAttribute("postFiltered",postService.getFilteredPost(authorNameList, tagNameList, publishedList));
+        model.addAttribute("postFiltered", postService.getFilteredPost(authorNameList, tagNameList, publishedList));
 
         return "filtered-post";
     }
 
     @GetMapping("/search")
-    public String findByKeyword(@RequestParam("keyword") String keyword, Model model){
-        model.addAttribute("searchedPost",postService.getSearchedPosts(keyword));
+    public String findByKeyword(@RequestParam("keyword") String keyword, Model model) {
+        model.addAttribute("searchedPost", postService.getSearchedPosts(keyword));
         model.addAttribute("filteredPost", new Post());
         return "searched-post";
     }
 
-    @RequestMapping("/new-post")
-    public String postForm(Model model){
-        Post newPost = new Post();
-        model.addAttribute("newPost",newPost);
+    @GetMapping("/new-post")
+    public String postForm(Model model) {
+        Post post = new Post();
+        model.addAttribute("newPost", post);
         return "create-new-blog-page";
     }
 
     @PostMapping("/addNewPost")
-    public String addNewPost(@ModelAttribute("newPost") Post newPost){
+    public String addNewPost(@ModelAttribute("newPost") Post newPost) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String currentDate = dtf.format(now);
@@ -114,61 +112,61 @@ public class PostController {
 
 
         String[] tagList = newPost.getTagName().trim().split(",");
-        for(String tagName : tagList){
+        for (String tagName : tagList) {
             PostTag newTag = new PostTag();
 
-                newTag.setPostId(newPost.getPostId());
-                newTag.setTagName(tagName);
-                newTag.setCreatedAt(currentDate);
-                newTag.setUpdatedAt(currentDate);
+            newTag.setPostId(newPost.getPostId());
+            newTag.setTagName(tagName);
+            newTag.setCreatedAt(currentDate);
+            newTag.setUpdatedAt(currentDate);
 
-                postTagService.addNewTag(newTag);
+            postTagService.addNewTag(newTag);
         }
 
         return "index";
     }
 
-    @RequestMapping("/post-list")
+    @GetMapping("/post-list")
 
-    public String showAllPost(Model model){
-         return findPaginated(1,"publishedAt", "asc", model);
+    public String showAllPost(Model model) {
+        return findPaginated(1, "publishedAt", "asc", model);
     }
 
     @RequestMapping(value = "/selected-post", method = RequestMethod.POST)
-    public String updatePostPage(@RequestParam(name="id", required=false) Integer postId, Model model){
+    public String updatePostPage(@RequestParam(name = "id", required = false) Integer postId, Model model) {
         Post updatePost = postService.getPostById(postId);
         model.addAttribute("updatePost", updatePost);
         return "update-post-page";
     }
 
     @RequestMapping(value = "/viewPostPage", method = RequestMethod.POST)
-    public String viewPostPage(@RequestParam(name = "id", required = false) Integer postId, Model model){
+    public String viewPostPage(@RequestParam(name = "id", required = false) Integer postId, Model model) {
         Post viewPost = postService.getPostById(postId);
         model.addAttribute("viewPost", viewPost);
-        return "user-dashboard";
+        return "selected-post-page";
     }
 
     @RequestMapping("/updatePost")
-    public String updatePost(@ModelAttribute("updatePost") Post updatePost){
+    public String updatePost(@ModelAttribute("updatePost") Post updatePost) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String currentTime = dtf.format(now);
         updatePost.setUpdatedAt(currentTime);
-         postService.updatePost(updatePost);
+        postService.updatePost(updatePost);
         return "index";
     }
 
 
     @RequestMapping(value = "/deletePost", method = RequestMethod.POST)
-    public String deletePost(@RequestParam(name="id", required=false) Integer postId){
+    public String deletePost(@RequestParam(name = "id", required = false) Integer postId) {
         postService.deletePost(postId);
         return "index";
     }
 
     @GetMapping("/http://abc.com/{pageNo}")
     public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
-         @RequestParam("sortField") String sortField, @RequestParam("order") String order,
-                                Model model){
+                                @RequestParam("sortField") String sortField, @RequestParam("order") String order,
+                                Model model) {
 
         int pageSize = 10;
 
@@ -177,17 +175,17 @@ public class PostController {
 
         Post filterPost = new Post();
 
-        model.addAttribute("currentPageNo",pageNo);
+        model.addAttribute("currentPageNo", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
 
         model.addAttribute("postList", listOfPost);
-        model.addAttribute("filterPost",filterPost);
+        model.addAttribute("filterPost", filterPost);
 
         model.addAttribute("sortField", sortField);
-        model.addAttribute("order",order);
+        model.addAttribute("order", order);
         model.addAttribute("reverseOrder", order.equals("asc") ? "desc" : "asc");
 
-        return "all-post-list";
+        return "dashboard";
     }
 }

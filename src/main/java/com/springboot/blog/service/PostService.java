@@ -7,13 +7,11 @@ import java.util.List;
 
 public interface PostService {
     void addNewPost(Post post);
-    List<Post> getAllPost();
 
     Post getPostById(int postId);
 
     String[] getAllAuthorName();
     String[] getAllTagName();
-    String[] getAllByPublishedAt(String tagName);
     String[] getAllPublishedAt();
 
     void updatePost(Post updatePost);

@@ -28,7 +28,7 @@ public class CommentController {
         newComment.setPostId(postId);
         model.addAttribute("id",postId);
         model.addAttribute("newComment",newComment);
-        return "comment-new-page";
+        return "new-comment-page";
     }
 
     @RequestMapping("/newComment")
@@ -53,7 +53,7 @@ public class CommentController {
     @RequestMapping(value = "/update-comment-page", method = RequestMethod.POST)
     public String updateCommentPage(@RequestParam(name="id", required=false) Integer commentId, Model model){
         model.addAttribute("updateComment", commentService.getCommentByCommentId(commentId));
-        return "comment-update-page";
+        return "update-comment-page";
     }
 
     @RequestMapping("/updateComment")

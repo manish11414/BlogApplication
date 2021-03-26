@@ -12,9 +12,9 @@
 
     <form action="#" th:action="@{/comment/newComment}" th:object="${newComment}" method="POST">
         <input type = "hidden" th:value="id" th:field = "*{postId}">
-        <input type = "text" th:field = "*{name}" placeholder="Name"><br><br>
-        <input type = "text" th:field = "*{email}" placeholder="Email"><br><br>
-        <input type = "text" th:field = "*{comment}" placeholder="Comment"  ><br><br>
+        <input type = "text" th:field = "*{name}" placeholder="Name" required autofocus="autofocus" /><br><br>
+        <input type = "text" th:field = "*{email}" placeholder="Email" required autofocus="autofocus" /><br><br>
+        <input type = "text" th:field = "*{comment}" placeholder="Comment" required autofocus="autofocus" /><br><br>
         <input type = "submit" value="Comment">
     </form>
 
