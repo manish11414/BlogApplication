@@ -41,7 +41,7 @@ public class CommentController {
         newComment.setUpdatedAt(currentTime);
 
         commentService.addNewComment(newComment);
-        return "index";
+        return "myindex";
     }
 
     @RequestMapping("/comment-page")
@@ -63,13 +63,13 @@ public class CommentController {
         String currentTime = dtf.format(now);
         updateComment.setUpdatedAt(currentTime);
         commentService.updateComment(updateComment);
-        return "index";
+        return "myindex";
     }
 
     @RequestMapping(value = "/delete-comment", method = RequestMethod.POST)
     public String deleteComment(@RequestParam(name="id", required=false) Integer commentId){
         commentService.deleteComment(commentId);
-        return "index";
+        return "myindex";
     }
 
 }

@@ -1,23 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
     <title>Blog Application</title>
 </head>
 <body >
 <header>
+    <div align="left" class="container my-2">
+        <form th:action="@{/post/post-list}">
+            <button type="submit" name="home">Home</button>
+        </form>
+    </div>
     <h1 style = "text-align:center">New Post</h1>
 </header>
 <div id = "new-post" align="center">
 
+
     <form action="#" th:action="@{/post/addNewPost}" th:object="${newPost}" method="POST">
 
-        <input type = "text" th:field = "*{title}" placeholder="Title" required autofocus="autofocus" /><br><br>
-        <input type = "text" th:field = "*{author}" placeholder="Author" required autofocus="autofocus" /><br><br>
-        <input type = "text" th:field = "*{tagName}" placeholder="Tags with comma separated" required autofocus="autofocus" /><br><br>
+        <input th:type="email" th:field = "*{email}" placeholder="Email Id" required autofocus="autofocus" /><br><br>
+
+        <input th:type = "text" th:field = "*{title}" placeholder="Title" required autofocus="autofocus" /><br><br>
+        <input th:type = "text" th:field = "*{author}" placeholder="Author" required autofocus="autofocus" /><br><br>
+        <input th:type = "text" th:field = "*{tagName}" placeholder="Tags with comma separated" required autofocus="autofocus" /><br><br>
         <textarea cols="50" rows="3" th:field = "*{excerpt}" placeholder="Excerpt" required autofocus="autofocus" /></textarea><br><br>
         <textarea cols="50" rows="20" th:field = "*{content}" placeholder="Write here.." required autofocus="autofocus" /></textarea><br><br>
-        <input type = "submit" value="Publish">
+        <input th:type = "submit" value="Publish">
 
     </form>
 

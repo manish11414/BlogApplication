@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
@@ -77,15 +79,29 @@
             </td>
 
             <td>
-                <form th:action = "@{/post/selected-post(id=${post.getPostId()})}" method = "post">
-                    <button type="submit" name="Update">Update</button>
-                </form>
+                <!--/*@thymesVar id="Username" type=""*/-->
+                <div th:if="${#authentication.principal.username} eq 'admin@gmail.com'
+                                 or ${#authentication.principal.username} eq ${post.email}">
+                    <!-- Add "update" button/link -->
+                    <form th:action="@{/post/selected-post(id=${post.getPostId()})}" method="post">
+                        <button type="submit" name="Update">Update</button>
+                    </form>
+                </div>
+
             </td>
+
             <td>
-                <form th:action = "@{/post/deletePost(id=${post.getPostId()})}" method = "post">
-                    <button type="submit" name="Delete">Delete</button>
-                </form>
+
+                <div th:if="${#authentication.principal.username} eq 'admin@gmail.com'
+                                 or ${#authentication.principal.username} eq ${post.email}">
+                    <form th:action="@{/post/deletePost(id=${post.getPostId()})}" method="post">
+                        <button type="submit" name="Delete"
+                                class="btn btn-danger btn-sm"
+                                onclick="if (!(confirm('Are you sure you want to delete this employee?'))) return false">Delete</button>
+                    </form>
+                </div>
             </td>
+
         </tr>
     </table>
 

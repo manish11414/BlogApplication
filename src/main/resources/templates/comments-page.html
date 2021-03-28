@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Comment list</title>
 </head>
 <body>
  <h2>Comments</h2>
+
+ <div align="left" class="container my-2">
+     <form th:action="@{/post/post-list}">
+         <button type="submit" name="home">Home</button>
+     </form>
+ </div>
+
   <table border="1">
       <th>Name</th>
       <th>Email</th>
@@ -21,15 +28,30 @@
           <td th:text="${comment.getUpdatedAt()}"></td>
 
           <td>
-              <form th:action = "@{/comment/update-comment-page(id=${comment.getCommentId()})}" method = "post">
-                  <button type="submit" name="Update">Update</button>
-              </form>
+              <!--/*@thymesVar id="Username" type=""*/-->
+              <div th:if="${#authentication.principal.username} eq 'admin@gmail.com'
+                                 or ${#authentication.principal.username} eq ${comment.email}">
+                  <form th:action = "@{/comment/update-comment-page(id=${comment.getCommentId()})}" method = "post">
+                      <button type="submit" name="Update">Update</button>
+                  </form>
+              </div>
+
           </td>
+
           <td>
-              <form th:action = "@{/comment/delete-comment(id=${comment.getCommentId()})}" method = "post">
-                  <button type="submit" name="Delete">Delete</button>
-              </form>
+
+              <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+                  <div th:if="${#authentication.principal.username} eq 'admin@gmail.com'
+                                 or ${#authentication.principal.username} eq ${post.email}">
+                      <form th:action = "@{/comment/delete-comment(id=${comment.getCommentId()})}" method = "post">
+                          <button type="submit" name="Delete"
+                                  class="btn btn-danger btn-sm"
+                                  onclick="if (!(confirm('Are you sure you want to delete this employee?'))) return false">Delete</button>
+                      </form>
+                  </div>
+              </div>
           </td>
+
       </tr>
   </table>
 </body>

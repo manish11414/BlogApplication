@@ -34,7 +34,19 @@ public class Post {
     @Column(name = "updated_at")
     private String updatedAt;
 
+    @Column(name = "tag_name")
     private String tagName;
+
+    @Column(name = "email")
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getTagName() {
         return tagName;
