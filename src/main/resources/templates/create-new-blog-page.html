@@ -17,7 +17,6 @@
 </header>
 <div id = "new-post" align="center">
 
-
     <form action="#" th:action="@{/post/addNewPost}" th:object="${newPost}" method="POST">
 
         <input th:type="email" th:field = "*{email}" placeholder="Email Id" required autofocus="autofocus" /><br><br>
